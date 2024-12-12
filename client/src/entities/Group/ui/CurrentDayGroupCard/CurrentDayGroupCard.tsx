@@ -14,7 +14,8 @@ interface CurrentDayGroupCardProps {
 export const CurrentDayGroupCard = memo((props: CurrentDayGroupCardProps) => {
     const { className, group, onClick } = props;
 
-    const { data: subjects, isLoading: isSubjectsLoading } = useSubjects(group.groupName || '');
+    const groupName = group.groupName ?? '';
+    const { data: subjects, isLoading: isSubjectsLoading } = useSubjects(groupName);
 
     return (
         <VStack
@@ -27,7 +28,7 @@ export const CurrentDayGroupCard = memo((props: CurrentDayGroupCardProps) => {
                 jobs={group.jobs}
                 subjects={subjects || []}
                 type="group"
-                groupName={group.groupName}
+                groupName={groupName}
             />
         </VStack>
     );

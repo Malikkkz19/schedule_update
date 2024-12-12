@@ -1,29 +1,33 @@
-version: "3"
-
 services:
   server:
-    container_name: server
-    build: ./server
+    container_name: schedule-viewer-server
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./files:/server/files 
     restart: always
     ports:
       - "5000:5000"
-    networks:
-      - custom_network
     depends_on:
       - database
+    environment:
+      - MONGODB_URI=mongodb://database:27017/schedule-viewer
 
   database:
-    container_name: database
     image: mongo:latest
-    restart: always
+    container_name: schedule-viewer-db
     environment:
-      POSTGRES_DB: schedule-viewer
+      - MONGO_INITDB_DATABASE=schedule-viewer
+    restart: always
     ports:
       - "27017:27017"
-    networks:
-      - custom_network
+    volumes:
+      - mongodb_data:/data/db
 
 networks:
-  custom_network:
+  default:
     driver: bridge
-    name: custom_network
+
+volumes:
+  mongodb_data:
